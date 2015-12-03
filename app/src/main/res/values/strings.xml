@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Scoff</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="addScoffTabs">
+        <item>Scoff</item>
+        <item>Products</item>
+    </string-array>
+</resources>
