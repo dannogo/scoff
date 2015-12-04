@@ -68,7 +68,7 @@
             android:id="@+id/scoff_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="100г"
+            android:text="100g"
             />
         <TextView
             android:id="@+id/scoff_calories"
