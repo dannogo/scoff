@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/validatingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText
+            android:id="@+id/denomination_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Denomination"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+        <!--<EditText-->
+            <!--android:id="@+id/proteins_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Proteins"-->
+            <!--android:inputType="number"-->
+            <!--/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/fats_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Fats"-->
+            <!--android:inputType="number"-->
+            <!--/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/carbohydrates_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Carbohydrates"-->
+            <!--android:inputType="number"-->
+            <!--/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/weight_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Weight"-->
+            <!--android:inputType="number"-->
+            <!--/>-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/calorific_capacity_field"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:hint="Calorific capacity"-->
+            <!--android:inputType="number"-->
+            <!--/>-->
+
+
+
+</LinearLayout>

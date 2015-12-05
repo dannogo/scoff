@@ -1,5 +1,7 @@
 package ua.com.scoff;
 
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,6 +34,15 @@ public class FragmentAddScoff extends Fragment {
         scoffList.setLayoutManager(new LinearLayoutManager(getActivity()));
         scoffAdapter = new ScoffAdapter(getActivity());
         scoffList.setAdapter(scoffAdapter);
+
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_add_scoff);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         return rootView;
     }

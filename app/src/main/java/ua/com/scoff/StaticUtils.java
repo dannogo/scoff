@@ -1,6 +1,11 @@
 package ua.com.scoff;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -8,6 +13,15 @@ import android.view.View;
  * Created by oleh on 12/3/15.
  */
 public class StaticUtils  {
+
+    protected static void showAddDialog(Context context){
+        DialogAdd dialogAdd = new DialogAdd();
+        Bundle data = new Bundle();
+//        data.putString();
+        dialogAdd.setArguments(data);
+        dialogAdd.show(((AppCompatActivity) context).getFragmentManager(), "FragmentAdd");
+
+    }
 
 
     static class BottomOffsetDecoration extends RecyclerView.ItemDecoration {
