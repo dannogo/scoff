@@ -16,12 +16,14 @@ public class AddScoffActivity extends AppCompatActivity {
 
     private ViewPager pager;
     private SlidingTabLayout tabLayout;
+    protected DatabaseAdapter databaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_scoff);
 
+        databaseAdapter = new DatabaseAdapter(this);
 
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new ScoffPagerAdapter(getSupportFragmentManager()));

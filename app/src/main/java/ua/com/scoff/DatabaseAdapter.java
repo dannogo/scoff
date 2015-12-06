@@ -1,5 +1,6 @@
 package ua.com.scoff;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,7 +20,19 @@ public class DatabaseAdapter {
     }
 
 
+    public int insertProduct(String denomination, int proteins, int fats, int carbohydrates, int caloricCapacity){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLHelper.PRODUCTS_DENOMINATION, denomination);
+        contentValues.put(SQLHelper.PRODUCTS_PROTEINS, proteins);
+        contentValues.put(SQLHelper.PRODUCTS_FATS, fats);
+        contentValues.put(SQLHelper.PRODUCTS_CARBOHYDRATES, carbohydrates);
+        contentValues.put(SQLHelper.PRODUCTS_CALORIES, caloricCapacity);
+        long id = db.insert(SQLHelper.TABLE_PRODUCTS, SQLHelper.PRODUCTS_FREQUENCY, contentValues);
 
+        db.close();
+        return (int)id;
+    }
 
 
 

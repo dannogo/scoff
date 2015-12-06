@@ -14,12 +14,12 @@ import android.view.View;
  */
 public class StaticUtils  {
 
-    protected static void showAddDialog(Context context){
-        DialogAdd dialogAdd = new DialogAdd();
+    protected static void showAddProductDialog(Context context){
+        DialogAddProduct dialogAddProduct = new DialogAddProduct();
         Bundle data = new Bundle();
 //        data.putString();
-        dialogAdd.setArguments(data);
-        dialogAdd.show(((AppCompatActivity) context).getFragmentManager(), "FragmentAdd");
+        dialogAddProduct.setArguments(data);
+        dialogAddProduct.show(((AppCompatActivity) context).getFragmentManager(), "FragmentAddProduct");
 
     }
 
