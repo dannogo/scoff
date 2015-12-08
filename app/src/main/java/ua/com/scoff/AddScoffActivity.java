@@ -18,7 +18,8 @@ public class AddScoffActivity extends AppCompatActivity {
     private SlidingTabLayout tabLayout;
     protected DatabaseAdapter databaseAdapter;
     protected FragmentPagerAdapter fragmentPagerAdapter;
-    protected ProductsAdapter productsAdapter;
+    protected FragmentAddProducts fragmentAddProducts;
+    protected FragmentAddScoff fragmentAddScoff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,6 @@ public class AddScoffActivity extends AppCompatActivity {
 
         pager = (ViewPager) findViewById(R.id.pager);
         fragmentPagerAdapter = new ScoffPagerAdapter(getSupportFragmentManager());
-//        fragmentPagerAdapter.get
         pager.setAdapter(fragmentPagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -73,8 +73,10 @@ public class AddScoffActivity extends AppCompatActivity {
             Fragment fragment = null;
             if (position == 1){
                 fragment = new FragmentAddScoff();
+                fragmentAddScoff = (FragmentAddScoff) fragment;
             }else if (position == 0){
                 fragment = new FragmentAddProducts();
+                fragmentAddProducts = (FragmentAddProducts) fragment;
             }
             return fragment;
         }

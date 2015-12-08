@@ -28,21 +28,9 @@ public class FragmentAddScoff extends Fragment {
 
         scoffList = (RecyclerView) rootView.findViewById(R.id.scoffList);
         scoffList.addItemDecoration(new DividerItemDecoration(getActivity(), null, true, true));
-        float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
-//        StaticUtils.BottomOffsetDecoration bottomOffsetDecoration = new StaticUtils.BottomOffsetDecoration((int)offsetPx);
-//        scoffList.addItemDecoration(bottomOffsetDecoration);
         scoffList.setLayoutManager(new LinearLayoutManager(getActivity()));
         scoffAdapter = new ScoffAdapter(getActivity());
         scoffList.setAdapter(scoffAdapter);
-
-//        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_add_scoff);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         return rootView;
     }

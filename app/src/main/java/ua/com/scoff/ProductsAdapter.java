@@ -1,11 +1,13 @@
 package ua.com.scoff;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -18,7 +20,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     private LayoutInflater inflater;
     Context context;
-    protected ArrayList<String> recordIDsList = new ArrayList<>();
+    protected ArrayList<String> productIDsList = new ArrayList<>();
     protected ArrayList<String> denominationsList = new ArrayList<>();
     protected ArrayList<String> proteinsList = new ArrayList<>();
     protected ArrayList<String> fatsList = new ArrayList<>();
@@ -33,7 +35,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         if (!result.isEmpty()){
             for (int i=0; i<result.size(); i++){
                 String[] currentRecord = result.get(i);
-                recordIDsList.add(currentRecord[0]);
+                productIDsList.add(currentRecord[0]);
                 denominationsList.add(currentRecord[1]);
                 proteinsList.add(currentRecord[2]);
                 fatsList.add(currentRecord[3]);
@@ -56,7 +58,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     @Override
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
-        holder.recordId.setText(recordIDsList.get(position));
+        holder.productId.setText(productIDsList.get(position));
         holder.denomination.setText(denominationsList.get(position));
         holder.proteins.setText(proteinsList.get(position));
         holder.fats.setText(fatsList.get(position));
@@ -67,22 +69,36 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     @Override
     public int getItemCount() {
-        return recordIDsList.size();
+        return productIDsList.size();
     }
 
-    class ProductsViewHolder extends RecyclerView.ViewHolder{
+    class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
 
-        TextView recordId, denomination, proteins, fats, carbohydrates, weight, calories;
+        TextView productId, denomination, proteins, fats, carbohydrates, weight, calories;
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
-            recordId = (TextView) itemView.findViewById(R.id.recordId);
+            productId = (TextView) itemView.findViewById(R.id.productId);
             proteins = (TextView) itemView.findViewById(R.id.product_proteins);
             fats = (TextView) itemView.findViewById(R.id.product_fats);
             carbohydrates = (TextView) itemView.findViewById(R.id.product_carbohydrates);
-            weight = (TextView) itemView.findViewById(R.id.product_weight);
+//            weight = (TextView) itemView.findViewById(R.id.product_weight);
             calories = (TextView) itemView.findViewById(R.id.product_calories);
             denomination = (TextView) itemView.findViewById(R.id.product_denomination);
+
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return false;
+        }
+
+        @Override
+        public void onClick(View v) {
+            StaticUtils.showPopupContextWindow(context, v);
+
         }
     }
 

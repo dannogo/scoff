@@ -25,7 +25,6 @@ import android.widget.Toast;
  */
 public class DialogAddProduct extends DialogFragment {
 
-//    private boolean dismissDialogOnPositiveButtonClick = true;
     EditText denomination, proteins, fats, carbohydrates, caloricCapacity;
     TextInputLayout denominationValidation, proteinsValidation, fatsValidation,
             carbohydratesValidation, caloricCapacityValidation;
@@ -95,8 +94,8 @@ public class DialogAddProduct extends DialogFragment {
         caloricCapacity.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE){
-                    if (!validateNumericField(caloricCapacity, caloricCapacityValidation, "Caloric capacity")){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if (!validateNumericField(caloricCapacity, caloricCapacityValidation, "Caloric capacity")) {
                         return true;
                     }
                 }
@@ -119,6 +118,9 @@ public class DialogAddProduct extends DialogFragment {
         Dialog dialog = builder.create();
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+
+//        Log.w("LOG", ""+((AddScoffActivity) getActivity()).fragmentAddProducts.);
 
         return dialog;
     }
@@ -155,16 +157,17 @@ public class DialogAddProduct extends DialogFragment {
 
                         if (id>0){
 
-                            ((AddScoffActivity)getActivity()).productsAdapter.recordIDsList.add(String.valueOf(id));
-                            ((AddScoffActivity)getActivity()).productsAdapter.denominationsList.add(denominationValue);
-                            ((AddScoffActivity)getActivity()).productsAdapter.proteinsList.add(String.valueOf(proteinsValue));
-                            ((AddScoffActivity)getActivity()).productsAdapter.fatsList.add(String.valueOf(fatsValue));
-                            ((AddScoffActivity)getActivity()).productsAdapter.carbohydratesList.add(String.valueOf(carbohydratesValue));
-                            ((AddScoffActivity)getActivity()).productsAdapter.caloriesList.add(String.valueOf(caloricCapacityValue));
-                            ((AddScoffActivity)getActivity()).productsAdapter.frequenciesList.add(0);
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.productIDsList.add(String.valueOf(id));
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.denominationsList.add(denominationValue);
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.proteinsList.add(String.valueOf(proteinsValue));
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.fatsList.add(String.valueOf(fatsValue));
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.carbohydratesList.add(String.valueOf(carbohydratesValue));
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.caloriesList.add(String.valueOf(caloricCapacityValue));
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.frequenciesList.add(0);
 
-                            ((AddScoffActivity) getActivity()).productsAdapter.notifyItemRangeInserted(((AddScoffActivity) getActivity()).productsAdapter.getItemCount() - 1, ((AddScoffActivity) getActivity()).productsAdapter.getItemCount());
-                            ((AddScoffActivity)getActivity()).productsAdapter.notifyDataSetChanged();
+                            ((AddScoffActivity) getActivity()).fragmentAddProducts.productsAdapter.notifyItemRangeInserted(
+                                    ((AddScoffActivity) getActivity()).fragmentAddProducts.productsAdapter.getItemCount() - 1, ((AddScoffActivity) getActivity()).fragmentAddProducts.productsAdapter.getItemCount());
+                            ((AddScoffActivity)getActivity()).fragmentAddProducts.productsAdapter.notifyDataSetChanged();
 
                         }
 

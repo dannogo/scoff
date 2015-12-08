@@ -43,14 +43,14 @@
                 android:layout_width="0dp"
                 android:layout_weight=".2"
                 android:layout_height="wrap_content"
-                android:text="5"
+                android:text="val"
                 />
             <TextView
                 android:id="@+id/scoff_fats"
                 android:layout_width="0dp"
                 android:layout_weight=".2"
                 android:layout_height="wrap_content"
-                android:text="3"
+                android:text="val"
                 />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_weight=".2"
                 android:layout_height="wrap_content"
-                android:text="170"
+                android:text="val"
                 />
 
             <View
@@ -81,13 +81,13 @@
             android:id="@+id/scoff_weight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="200g"
+            android:text="val g"
             />
         <TextView
             android:id="@+id/scoff_calories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="250"
+            android:text="val"
             android:textColor="#00897B"
             android:textStyle="bold"
             />

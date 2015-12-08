@@ -19,7 +19,7 @@ import serving.DividerItemDecoration;
 public class FragmentAddProducts extends Fragment {
 
     RecyclerView productsList;
-//    ProductsAdapter productsAdapter;
+    ProductsAdapter productsAdapter;
 
     @Nullable
     @Override
@@ -32,8 +32,9 @@ public class FragmentAddProducts extends Fragment {
         StaticUtils.BottomOffsetDecoration bottomOffsetDecoration = new StaticUtils.BottomOffsetDecoration((int)offsetPx);
         productsList.addItemDecoration(bottomOffsetDecoration);
         productsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ((AddScoffActivity)getActivity()).productsAdapter = new ProductsAdapter(getActivity());
-        productsList.setAdapter(((AddScoffActivity)getActivity()).productsAdapter);
+        productsAdapter = new ProductsAdapter(getActivity());
+
+        productsList.setAdapter(productsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_add_product);
         fab.setOnClickListener(new View.OnClickListener() {
