@@ -25,7 +25,7 @@ import android.widget.Toast;
  */
 public class DialogAddProduct extends DialogFragment {
 
-    private boolean dismissDialogOnPositiveButtonClick = true;
+//    private boolean dismissDialogOnPositiveButtonClick = true;
     EditText denomination, proteins, fats, carbohydrates, caloricCapacity;
     TextInputLayout denominationValidation, proteinsValidation, fatsValidation,
             carbohydratesValidation, caloricCapacityValidation;
@@ -83,7 +83,7 @@ public class DialogAddProduct extends DialogFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_NEXT){
-                    if (!validateNumericField(carbohydrates, carbohydratesValidation, "Carbohydrates")){
+                    if (!validateNumericField(carbohydrates, carbohydratesValidation, "Carbs")){
                         return true;
                     }
                 }
@@ -136,7 +136,7 @@ public class DialogAddProduct extends DialogFragment {
                     boolean isDenominationValid = validateDenomination();
                     boolean isProteinsValid = validateNumericField(proteins, proteinsValidation, "Proteins");
                     boolean isFatsValid = validateNumericField(fats, fatsValidation, "Fats");
-                    boolean isCarbohydratesValid = validateNumericField(carbohydrates, carbohydratesValidation, "Carbohydrates");
+                    boolean isCarbohydratesValid = validateNumericField(carbohydrates, carbohydratesValidation, "Carbs");
                     boolean isCaloricCapacityValid = validateNumericField(caloricCapacity, caloricCapacityValidation, "Caloric capacity");
 
                     if (isDenominationValid && isProteinsValid && isFatsValid && isCarbohydratesValid && isCaloricCapacityValid){
@@ -153,7 +153,20 @@ public class DialogAddProduct extends DialogFragment {
                         int id = ((AddScoffActivity) getActivity()).databaseAdapter.insertProduct(
                                 denominationValue, proteinsValue, fatsValue, carbohydratesValue, caloricCapacityValue);
 
-                        Log.w("LOG", String.valueOf(id));
+                        if (id>0){
+
+                            ((AddScoffActivity)getActivity()).productsAdapter.recordIDsList.add(String.valueOf(id));
+                            ((AddScoffActivity)getActivity()).productsAdapter.denominationsList.add(denominationValue);
+                            ((AddScoffActivity)getActivity()).productsAdapter.proteinsList.add(String.valueOf(proteinsValue));
+                            ((AddScoffActivity)getActivity()).productsAdapter.fatsList.add(String.valueOf(fatsValue));
+                            ((AddScoffActivity)getActivity()).productsAdapter.carbohydratesList.add(String.valueOf(carbohydratesValue));
+                            ((AddScoffActivity)getActivity()).productsAdapter.caloriesList.add(String.valueOf(caloricCapacityValue));
+                            ((AddScoffActivity)getActivity()).productsAdapter.frequenciesList.add(0);
+
+                            ((AddScoffActivity) getActivity()).productsAdapter.notifyItemRangeInserted(((AddScoffActivity) getActivity()).productsAdapter.getItemCount() - 1, ((AddScoffActivity) getActivity()).productsAdapter.getItemCount());
+                            ((AddScoffActivity)getActivity()).productsAdapter.notifyDataSetChanged();
+
+                        }
 
                         dialog.dismiss();
                     }

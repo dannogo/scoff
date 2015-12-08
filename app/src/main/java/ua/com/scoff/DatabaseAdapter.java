@@ -2,10 +2,13 @@ package ua.com.scoff;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by oleh on 12/4/15.
@@ -19,6 +22,44 @@ public class DatabaseAdapter {
         this.context = context;
     }
 
+
+    public ArrayList<String[]> getProductsData(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String[] columns = {SQLHelper.PRODUCTS_ID, SQLHelper.PRODUCTS_DENOMINATION,
+                SQLHelper.PRODUCTS_PROTEINS, SQLHelper.PRODUCTS_FATS, SQLHelper.PRODUCTS_CARBOHYDRATES,
+                SQLHelper.PRODUCTS_CALORIES, SQLHelper.PRODUCTS_FREQUENCY};
+
+        // Здесь сделать сортировку по PRODUCTS_FREQUENCY
+        Cursor cursor = db.query(SQLHelper.TABLE_PRODUCTS, columns, null, null, null, null, SQLHelper.PRODUCTS_DENOMINATION);
+
+        ArrayList<String[]> result = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int idIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_ID);
+            int denominationIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_DENOMINATION);
+            int proteinsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_PROTEINS);
+            int fatsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_FATS);
+            int carbohydratesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CARBOHYDRATES);
+            int caloriesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CALORIES);
+            int frequencyIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_FREQUENCY);
+
+            int id = cursor.getInt(idIndex);
+            String denomination = cursor.getString(denominationIndex);
+            int proteins = cursor.getInt(proteinsIndex);
+            int fats = cursor.getInt(fatsIndex);
+            int carbohydrates = cursor.getInt(carbohydratesIndex);
+            int calories = cursor.getInt(caloriesIndex);
+            int frequency = cursor.getInt(frequencyIndex);
+
+            String[] row = {String.valueOf(id), denomination, String.valueOf(proteins),
+                    String.valueOf(fats), String.valueOf(carbohydrates), String.valueOf(calories), String.valueOf(frequency)};
+            result.add(row);
+
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
 
     public int insertProduct(String denomination, int proteins, int fats, int carbohydrates, int caloricCapacity){
         SQLiteDatabase db = helper.getWritableDatabase();

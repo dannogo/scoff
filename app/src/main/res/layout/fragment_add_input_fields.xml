@@ -67,7 +67,7 @@
                 android:id="@+id/carbohydrates_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Carbohydrates"
+                android:hint="Carbs"
                 android:nextFocusDown ="@+id/caloric_capacity_field"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>

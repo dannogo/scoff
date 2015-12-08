@@ -7,7 +7,7 @@
     <string name="ok">Ok</string>
 
     <string-array name="addScoffTabs">
-        <item>Scoff</item>
         <item>Products</item>
+        <item>Scoff</item>
     </string-array>
 </resources>

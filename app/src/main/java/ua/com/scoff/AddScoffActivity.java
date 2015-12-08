@@ -17,6 +17,8 @@ public class AddScoffActivity extends AppCompatActivity {
     private ViewPager pager;
     private SlidingTabLayout tabLayout;
     protected DatabaseAdapter databaseAdapter;
+    protected FragmentPagerAdapter fragmentPagerAdapter;
+    protected ProductsAdapter productsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,9 @@ public class AddScoffActivity extends AppCompatActivity {
         databaseAdapter = new DatabaseAdapter(this);
 
         pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new ScoffPagerAdapter(getSupportFragmentManager()));
+        fragmentPagerAdapter = new ScoffPagerAdapter(getSupportFragmentManager());
+//        fragmentPagerAdapter.get
+        pager.setAdapter(fragmentPagerAdapter);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -67,9 +71,9 @@ public class AddScoffActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Fragment fragment = null;
-            if (position == 0){
+            if (position == 1){
                 fragment = new FragmentAddScoff();
-            }else if (position == 1){
+            }else if (position == 0){
                 fragment = new FragmentAddProducts();
             }
             return fragment;
