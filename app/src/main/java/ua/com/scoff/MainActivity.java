@@ -1,24 +1,50 @@
 package ua.com.scoff;
 
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import serving.DividerItemDecoration;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    RecyclerView spansList;
+    SpansAdapter spansAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        spansList = (RecyclerView) findViewById(R.id.spansList);
+        spansList.addItemDecoration(new DividerItemDecoration(this, null, true, true));
+        float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);
+        StaticUtils.BottomOffsetDecoration bottomOffsetDecoration = new StaticUtils.BottomOffsetDecoration((int)offsetPx);
+        spansList.addItemDecoration(bottomOffsetDecoration);
+        spansList.setLayoutManager(new LinearLayoutManager(this));
+        spansAdapter = new SpansAdapter(this);
 
+        spansList.setAdapter(spansAdapter);
 
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_span);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                StaticUtils.showAddProductDialog(MainActivity.this);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show();
+            }
+        });
 
     }
 

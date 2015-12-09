@@ -75,6 +75,10 @@ public class DatabaseAdapter {
         return (int)id;
     }
 
+    public int insertSpan(){
+        
+    }
+
     public int insertRecordToSpan(int productId){
         return 0;
     }
