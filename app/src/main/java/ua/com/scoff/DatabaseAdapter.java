@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by oleh on 12/4/15.
@@ -20,6 +23,33 @@ public class DatabaseAdapter {
     public DatabaseAdapter(Context context){
         helper = new SQLHelper(context);
         this.context = context;
+    }
+
+    public ArrayList<String[]> getSpansData(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String[] columns = {SQLHelper.SPANS_ID, SQLHelper.SPANS_NAME, SQLHelper.SPANS_DATETIME, SQLHelper.SPANS_ISCLOSED};
+        Cursor cursor = db.query(SQLHelper.TABLE_SPANS, columns, null, null, null, null, SQLHelper.SPANS_ID+" DESC");
+
+        ArrayList<String[]> result = new ArrayList<>();
+        while (cursor.moveToNext()){
+            int idIndex = cursor.getColumnIndex(SQLHelper.SPANS_ID);
+            int nameIndex = cursor.getColumnIndex(SQLHelper.SPANS_NAME);
+            int datetimeIndex = cursor.getColumnIndex(SQLHelper.SPANS_DATETIME);
+            int isClosedIndex = cursor.getColumnIndex(SQLHelper.SPANS_ISCLOSED);
+
+            int id = cursor.getInt(idIndex);
+            String name = cursor.getString(nameIndex);
+            String datetime = cursor.getString(datetimeIndex);
+            int isClosed = cursor.getInt(isClosedIndex);
+
+            String[] row = {String.valueOf(id), name, datetime, String.valueOf(isClosed)};
+            result.add(row);
+        }
+        cursor.close();
+        db.close();
+
+        return result;
     }
 
 
@@ -75,8 +105,28 @@ public class DatabaseAdapter {
         return (int)id;
     }
 
-    public int insertSpan(){
-        
+    public int insertSpan(String name){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        if (name == null){
+            name = StaticUtils.getCurrentDateTime(true);
+        }
+        contentValues.put(SQLHelper.SPANS_NAME, name);
+        contentValues.put(SQLHelper.SPANS_ISCLOSED, false);
+        long id = db.insert(SQLHelper.TABLE_SPANS, SQLHelper.SPANS_DATETIME, contentValues);
+
+        db.close();
+        return (int)id;
+    }
+
+    public int closeOrOpenSpan(int id, boolean close){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLHelper.SPANS_ISCLOSED, close);
+        String[] whereArgs = {String.valueOf(id)};
+        int count = db.update(SQLHelper.TABLE_SPANS, contentValues, SQLHelper.SPANS_ID+ " =?", whereArgs);
+        db.close();
+        return count;
     }
 
     public int insertRecordToSpan(int productId){

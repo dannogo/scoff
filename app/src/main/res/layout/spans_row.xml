@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="8dp"
+    android:id="@+id/spanRow"
     >
 
     <TextView
@@ -23,6 +24,7 @@
         >
 
         <TextView
+            android:id="@+id/spanName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Some span"
@@ -30,6 +32,7 @@
             />
 
         <TextView
+            android:id="@+id/spanDatetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -38,6 +41,7 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/stateIcon"
         android:layout_width="46dp"
         android:layout_height="46dp"
         android:layout_weight="0"

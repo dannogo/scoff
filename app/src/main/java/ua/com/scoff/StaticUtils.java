@@ -9,16 +9,48 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by oleh on 12/3/15.
  */
 public class StaticUtils  {
+
+    protected static String getCurrentDateTime(boolean forTitle){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df;
+        if (forTitle) {
+            df = new SimpleDateFormat("EEEE dd MMM");
+        }else{
+            df = new SimpleDateFormat("dd MMM yyyy   HH:mm:ss");
+        }
+        return df.format(c.getTime());
+    }
+
+    protected static String sqliteDatetimeToProperString(String timeString){
+        DateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String finalDateTime = "";
+        try {
+            Date date = iso8601Format.parse(timeString);
+            DateFormat df = new SimpleDateFormat("dd MMM yyyy   HH:mm:ss");
+            finalDateTime = df.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return finalDateTime;
+    }
 
     protected static void showAddProductDialog(Context context){
         DialogAddProduct dialogAddProduct = new DialogAddProduct();
