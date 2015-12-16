@@ -84,6 +84,8 @@ public class DialogAddProductToSpan extends DialogFragment {
                         int id = ((AddScoffActivity)getActivity()).databaseAdapter.insertRecordToSpan(spanId, productId, quantityValue);
                         Log.w("DialogAddProductToSpan", String.valueOf(id));
 
+                        ((AddScoffActivity)getActivity()).fragmentAddScoff.scoffAdapter = new ScoffAdapter(getActivity());
+                        ((AddScoffActivity)getActivity()).fragmentAddScoff.scoffList.setAdapter(((AddScoffActivity)getActivity()).fragmentAddScoff.scoffAdapter);
                         dialog.dismiss();
                     }
 

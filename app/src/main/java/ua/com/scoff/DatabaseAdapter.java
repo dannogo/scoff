@@ -46,6 +46,7 @@ public class DatabaseAdapter {
                 + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
 
         String orderBy = SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID + " ASC";
+//        String orderBy = SQLHelper.RECORDS_ID + " ASC";
 
         String[] columns = {SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID,
                 SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME,
@@ -56,22 +57,48 @@ public class DatabaseAdapter {
                 SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES,
                 SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES
         };
+
+//        String[] columns = {SQLHelper.RECORDS_ID,
+//                SQLHelper.RECORDS_DATETIME,
+//                SQLHelper.RECORDS_QUANTITY,
+//                SQLHelper.PRODUCTS_DENOMINATION,
+//                SQLHelper.PRODUCTS_PROTEINS,
+//                SQLHelper.PRODUCTS_FATS,
+//                SQLHelper.PRODUCTS_CARBOHYDRATES,
+//                SQLHelper.PRODUCTS_CALORIES
+//        };
+
         String[] whereArgs = {String.valueOf(spanId)};
 
         Cursor cursor = builder.query(db, columns,
                 SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_SPAN + " =?",
                 whereArgs, null, null, orderBy);
 
+//        Cursor cursor = builder.query(db, columns,
+//                SQLHelper.RECORDS_RELATED_SPAN + " =?",
+//                whereArgs, null, null, orderBy);
+
         ArrayList<String[]> result = new ArrayList<>();
         while (cursor.moveToNext()){
-            int recIdIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID);
-            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME);
-            int recQuantityIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_QUANTITY);
-            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_DENOMINATION);
-            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_PROTEINS);
-            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_FATS);
-            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES);
-            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES);
+            // this doesnt work well because of bug https://code.google.com/p/android/issues/detail?id=7201
+
+//            int recIdIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID);
+//            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME);
+//            int recQuantityIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_QUANTITY);
+//            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_DENOMINATION);
+//            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_PROTEINS);
+//            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_FATS);
+//            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES);
+//            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES);
+
+            int recIdIndex = cursor.getColumnIndex(SQLHelper.RECORDS_ID);
+            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.RECORDS_DATETIME);
+            int recQuantityIndex = cursor.getColumnIndex(SQLHelper.RECORDS_QUANTITY);
+            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_DENOMINATION);
+            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_PROTEINS);
+            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_FATS);
+            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CARBOHYDRATES);
+            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CALORIES);
 
             int recId = cursor.getInt(recIdIndex);
             String recDatetime = cursor.getString(recDatetimeIndex);
@@ -90,6 +117,77 @@ public class DatabaseAdapter {
             result.add(row);
         }
 
+        cursor.close();
+        db.close();
+
+        return result;
+    }
+
+    public ArrayList<String[]> getSums(int spanId){
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        db.execSQL("DROP VIEW IF EXISTS view");
+
+        db.execSQL("CREATE VIEW view AS SELECT * FROM " + SQLHelper.TABLE_RECORDS +" INNER JOIN "+SQLHelper.TABLE_PRODUCTS+" ON "
+                + SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_PRODUCT +" = "
+                + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
+
+        String[] whereArgs = new String[]{ String.valueOf(spanId) };
+
+//        db.rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
+
+//        Cursor cursor1 = db.rawQuery("SELECT " + SQLHelper.RECORDS_ID + ", " +
+//                SQLHelper.RECORDS_DATETIME + ", " +
+//                SQLHelper.PRODUCTS_DENOMINATION + ", " +
+//                SQLHelper.PRODUCTS_PROTEINS + ", " +
+//                SQLHelper.PRODUCTS_FATS + ", " +
+//                SQLHelper.PRODUCTS_CARBOHYDRATES + ", " +
+//                SQLHelper.PRODUCTS_CALORIES + " FROM view WHERE " + SQLHelper.RECORDS_RELATED_SPAN + " =?", whereArgs);
+
+        Cursor cursor = db.rawQuery("SELECT SUM("+SQLHelper.PRODUCTS_PROTEINS+"), SUM("+
+                SQLHelper.PRODUCTS_FATS+"), SUM("+SQLHelper.PRODUCTS_CARBOHYDRATES+"), SUM("+SQLHelper.PRODUCTS_CALORIES+
+                        ") FROM view WHERE "+SQLHelper.RECORDS_RELATED_SPAN+ " =?", whereArgs);
+
+        ArrayList<String[]> result = new ArrayList<>();
+        while (cursor.moveToNext()){
+
+            int sumProteins = cursor.getInt(0);
+            int sumFats = cursor.getInt(1);
+            int sumCarbohydrates = cursor.getInt(2);
+            int sumCalories = cursor.getInt(3);
+
+            Log.w("getSums", "proteins: "+sumProteins);
+            Log.w("getSums", "fats: "+sumFats);
+            Log.w("getSums", "carbohydrates: "+sumCarbohydrates);
+            Log.w("getSums", "calories: "+sumCalories);
+
+
+//            int recIdIndex = cursor.getColumnIndex(SQLHelper.RECORDS_ID);
+//            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.RECORDS_DATETIME);
+//            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_DENOMINATION);
+//            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_PROTEINS);
+//            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_FATS);
+//            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CARBOHYDRATES);
+//            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CALORIES);
+
+//            int recId = cursor.getInt(recIdIndex);
+//            String recDatetime = cursor.getString(recDatetimeIndex);
+//            String prodDenomination = cursor.getString(prodDenominationIndex);
+//            int prodProteins = cursor.getInt(prodProteinsIndex);
+//            int prodFats = cursor.getInt(prodFatsIndex);
+//            int prodCarbohydrates = cursor.getInt(prodCarbohydratesIndex);
+//            int prodCalories = cursor.getInt(prodCaloriesIndex);
+
+//            Log.w("getSumsTest", "id: "+recId+"\nrecDatetime: "+recDatetime+"\nprodDenomination: "+prodDenomination+"\nprodProteins: "+prodProteins+
+//            "\nprodFats: "+prodFats+"\nprodCarbohydrates: "+prodCarbohydrates+"\nprodCalories: "+prodCalories);
+//
+//            String[] row = {
+//                    String.valueOf(recId), recDatetime,
+//                    prodDenomination, String.valueOf(prodProteins), String.valueOf(prodFats),
+//                    String.valueOf(prodCarbohydrates), String.valueOf(prodCalories)
+//            };
+//            result.add(row);
+        }
         cursor.close();
         db.close();
 
@@ -217,11 +315,11 @@ public class DatabaseAdapter {
 
         private Context context;
         private static final String DATABASE_NAME = "scoff";
-        private static final int DATABASE_VERSION = 7;
+        private static final int DATABASE_VERSION = 8;
 
         // Table products
         private static final String TABLE_PRODUCTS = "products";
-        private static final String PRODUCTS_ID = "id";
+        private static final String PRODUCTS_ID = "product_id";
         private static final String PRODUCTS_DENOMINATION = "denomination";
         private static final String PRODUCTS_PROTEINS = "proteins";
         private static final String PRODUCTS_FATS = "fats";
@@ -242,9 +340,9 @@ public class DatabaseAdapter {
 
         // Table spans
         private static final String TABLE_SPANS = "spans";
-        private static final String SPANS_ID = "id";
+        private static final String SPANS_ID = "span_id";
         private static final String SPANS_NAME = "name";
-        private static final String SPANS_DATETIME = "datetime";
+        private static final String SPANS_DATETIME = "span_datetime";
         private static final String SPANS_ISCLOSED = "isclosed";
 
         private static final String CREATE_TABLE_SPANS = "CREATE TABLE " + TABLE_SPANS + "("
@@ -257,8 +355,8 @@ public class DatabaseAdapter {
 
         // Table records
         private static final String TABLE_RECORDS = "records";
-        private static final String RECORDS_ID = "id";
-        private static final String RECORDS_DATETIME = "datetime";
+        private static final String RECORDS_ID = "record_id";
+        private static final String RECORDS_DATETIME = "record_datetime";
         private static final String RECORDS_QUANTITY = "quantity";
         private static final String RECORDS_RELATED_PRODUCT = "related_product";
         private static final String RECORDS_RELATED_SPAN = "related_span";
