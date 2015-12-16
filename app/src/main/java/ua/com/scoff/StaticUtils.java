@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -61,7 +62,7 @@ public class StaticUtils  {
 
     }
 
-    protected  static void  showPopupContextWindow(Context context, View view){
+    protected  static void  showPopupContextWindow(final Context context, final View view){
         int[] location = new int[2];
 
         // Get the x, y location and store it in the location[] array
@@ -81,10 +82,21 @@ public class StaticUtils  {
 
         View addToSpanItem = layout.findViewById(R.id.addToSpanItem);
         View deleteProductItem = layout.findViewById(R.id.deleteProductItem);
+        final int spanId = Integer.parseInt(((AddScoffActivity) context).spanId);
+        TextView productIdTextView = (TextView)view.findViewById(R.id.productId);
+        final int productId = Integer.parseInt(productIdTextView.getText().toString());
 
         addToSpanItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                DialogAddProductToSpan dialogAddProductToSpan = new DialogAddProductToSpan();
+                Bundle data = new Bundle();
+                data.putInt("spanId", spanId);
+                data.putInt("productId", productId);
+                dialogAddProductToSpan.setArguments(data);
+                dialogAddProductToSpan.show(((AddScoffActivity)context).getFragmentManager(), "FragmentAddProductToSpan");
+
                 popupWindow.dismiss();
 
             }

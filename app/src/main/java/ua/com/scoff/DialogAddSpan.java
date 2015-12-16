@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by oleh on 12/10/15.
@@ -42,17 +43,21 @@ public class DialogAddSpan extends DialogFragment {
                     title = null;
                 }
                 int id = ((MainActivity)getActivity()).databaseAdapter.insertSpan(title);
-                Log.w("Id of iserted span", String.valueOf(id));
-                ((MainActivity)getActivity()).spansAdapter.spanIdsList.add(0, String.valueOf(id));
-                if (title == null) {
-                    ((MainActivity) getActivity()).spansAdapter.namesList.add(0, StaticUtils.getCurrentDateTime(true));
+                Log.w("Id of inserted span", String.valueOf(id));
+                if (id>0) {
+                    ((MainActivity) getActivity()).spansAdapter.spanIdsList.add(0, String.valueOf(id));
+                    if (title == null) {
+                        ((MainActivity) getActivity()).spansAdapter.namesList.add(0, StaticUtils.getCurrentDateTime(true));
+                    } else {
+                        ((MainActivity) getActivity()).spansAdapter.namesList.add(0, title);
+                    }
+                    ((MainActivity) getActivity()).spansAdapter.datetimesList.add(0, StaticUtils.getCurrentDateTime(false));
+                    ((MainActivity) getActivity()).spansAdapter.isClosedList.add(0, false);
+                    ((MainActivity) getActivity()).spansAdapter.notifyItemInserted(0);
+                    ((MainActivity) getActivity()).spansList.scrollToPosition(0);
                 }else{
-                    ((MainActivity) getActivity()).spansAdapter.namesList.add(0, title);
+                    Toast.makeText(getActivity(), "The Span was NOT save", Toast.LENGTH_SHORT).show();
                 }
-                ((MainActivity)getActivity()).spansAdapter.datetimesList.add(0, StaticUtils.getCurrentDateTime(false));
-                ((MainActivity)getActivity()).spansAdapter.isClosedList.add(0, false);
-                ((MainActivity)getActivity()).spansAdapter.notifyItemInserted(0);
-                ((MainActivity)getActivity()).spansList.scrollToPosition(0);
 
             }
         });

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
@@ -23,6 +25,75 @@ public class DatabaseAdapter {
     public DatabaseAdapter(Context context){
         helper = new SQLHelper(context);
         this.context = context;
+    }
+
+    public void getTables(){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if (cursor.moveToFirst()) {
+            while ( !cursor.isAfterLast() ) {
+                Log.w("TABLE", cursor.getString(0));
+                cursor.moveToNext();
+            }
+        }
+    }
+
+    public ArrayList<String[]> getScoffRecordsData(int spanId){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(SQLHelper.TABLE_RECORDS +" INNER JOIN "+SQLHelper.TABLE_PRODUCTS+" ON "
+                + SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_PRODUCT +" = "
+                + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
+
+        String orderBy = SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID + " ASC";
+
+        String[] columns = {SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID,
+                SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME,
+                SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_QUANTITY,
+                SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_DENOMINATION,
+                SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_PROTEINS,
+                SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_FATS,
+                SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES,
+                SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES
+        };
+        String[] whereArgs = {String.valueOf(spanId)};
+
+        Cursor cursor = builder.query(db, columns,
+                SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_SPAN + " =?",
+                whereArgs, null, null, orderBy);
+
+        ArrayList<String[]> result = new ArrayList<>();
+        while (cursor.moveToNext()){
+            int recIdIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID);
+            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME);
+            int recQuantityIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_QUANTITY);
+            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_DENOMINATION);
+            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_PROTEINS);
+            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_FATS);
+            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES);
+            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES);
+
+            int recId = cursor.getInt(recIdIndex);
+            String recDatetime = cursor.getString(recDatetimeIndex);
+            int recQuantity = cursor.getInt(recQuantityIndex);
+            String prodDenomination = cursor.getString(prodDenominationIndex);
+            int prodProteins = cursor.getInt(prodProteinsIndex);
+            int prodFats = cursor.getInt(prodFatsIndex);
+            int prodCarbohydrates = cursor.getInt(prodCarbohydratesIndex);
+            int prodCalories = cursor.getInt(prodCaloriesIndex);
+
+            String[] row = {
+                    String.valueOf(recId), recDatetime, String.valueOf(recQuantity),
+                    prodDenomination, String.valueOf(prodProteins), String.valueOf(prodFats),
+                    String.valueOf(prodCarbohydrates), String.valueOf(prodCalories)
+            };
+            result.add(row);
+        }
+
+        cursor.close();
+        db.close();
+
+        return result;
     }
 
     public ArrayList<String[]> getSpansData(){
@@ -119,6 +190,18 @@ public class DatabaseAdapter {
         return (int)id;
     }
 
+    public int insertRecordToSpan(int spanId, int productId, int quantity){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SQLHelper.RECORDS_RELATED_SPAN, spanId);
+        contentValues.put(SQLHelper.RECORDS_RELATED_PRODUCT, productId);
+        contentValues.put(SQLHelper.RECORDS_QUANTITY, quantity);
+        long id = db.insert(SQLHelper.TABLE_RECORDS, SQLHelper.RECORDS_DATETIME, contentValues);
+
+        db.close();
+        return (int)id;
+    }
+
     public int closeOrOpenSpan(int id, boolean close){
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -129,18 +212,12 @@ public class DatabaseAdapter {
         return count;
     }
 
-    public int insertRecordToSpan(int productId){
-        return 0;
-    }
-
-
-
 
     static class SQLHelper extends SQLiteOpenHelper {
 
         private Context context;
         private static final String DATABASE_NAME = "scoff";
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 7;
 
         // Table products
         private static final String TABLE_PRODUCTS = "products";
@@ -182,12 +259,16 @@ public class DatabaseAdapter {
         private static final String TABLE_RECORDS = "records";
         private static final String RECORDS_ID = "id";
         private static final String RECORDS_DATETIME = "datetime";
+        private static final String RECORDS_QUANTITY = "quantity";
         private static final String RECORDS_RELATED_PRODUCT = "related_product";
         private static final String RECORDS_RELATED_SPAN = "related_span";
 
         private static final String CREATE_TABLE_RECORDS = "CREATE TABLE " + TABLE_RECORDS + "("
                     + RECORDS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + RECORDS_DATETIME + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                    + RECORDS_QUANTITY + " INTEGER NOT NULL, "
+                    + RECORDS_RELATED_PRODUCT + " INTEGER NOT NULL, "
+                    + RECORDS_RELATED_SPAN + " INTEGER NOT NULL, "
                     + "FOREIGN KEY(" + RECORDS_RELATED_PRODUCT + ") REFERENCES "
                                 + TABLE_PRODUCTS + "(" + PRODUCTS_ID + ")  ON DELETE CASCADE, "
                     + "FOREIGN KEY(" + RECORDS_RELATED_SPAN + ") REFERENCES "
@@ -208,6 +289,7 @@ public class DatabaseAdapter {
                 db.execSQL(CREATE_TABLE_PRODUCTS);
                 db.execSQL(CREATE_TABLE_SPANS);
                 db.execSQL(CREATE_TABLE_RECORDS);
+                Toast.makeText(context, "New version of database created", Toast.LENGTH_LONG).show();
             } catch (SQLException e){
                 e.printStackTrace();
                 Toast.makeText(context, ""+e, Toast.LENGTH_LONG).show();
@@ -220,6 +302,8 @@ public class DatabaseAdapter {
                 db.execSQL(DROP_TABLE_PRODUCTS);
                 db.execSQL(DROP_TABLE_SPANS);
                 db.execSQL(DROP_TABLE_RECORDS);
+                onCreate(db);
+                Toast.makeText(context, "The previous version of database dropped", Toast.LENGTH_LONG).show();
             } catch (SQLException e){
                 e.printStackTrace();
                 Toast.makeText(context, ""+e, Toast.LENGTH_LONG).show();

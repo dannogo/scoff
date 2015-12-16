@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         databaseAdapter = new DatabaseAdapter(this);
 
+//        databaseAdapter.getTables();
+
         spansList = (RecyclerView) findViewById(R.id.spansList);
         spansList.addItemDecoration(new DividerItemDecoration(this, null, true, true));
         float offsetPx = getResources().getDimension(R.dimen.bottom_offset_dp);

@@ -186,7 +186,7 @@ public class DialogAddProduct extends DialogFragment {
             validation.setHint(hint);
             return true;
         }else{
-            validation.setError("Invalide value");
+            validation.setError("Empty field");
             validation.setHint("Fill it");
             return false;
         }

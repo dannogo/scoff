@@ -2,6 +2,7 @@ package ua.com.scoff;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,6 +32,9 @@ public class SpansAdapter extends RecyclerView.Adapter<SpansAdapter.SpansViewHol
         inflater = LayoutInflater.from(context);
         this.context = context;
         ArrayList<String[]> result = ((MainActivity)context).databaseAdapter.getSpansData();
+
+//        ((MainActivity)context).databaseAdapter.getTables();
+
         if (!result.isEmpty()){
             for (int i=0; i<result.size(); i++){
                 String[] currentRecord = result.get(i);
@@ -88,6 +92,7 @@ public class SpansAdapter extends RecyclerView.Adapter<SpansAdapter.SpansViewHol
             spanRow = (LinearLayout) itemView.findViewById(R.id.spanRow);
 
             stateIcon.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -105,6 +110,12 @@ public class SpansAdapter extends RecyclerView.Adapter<SpansAdapter.SpansViewHol
                         itemView.setBackgroundColor(Color.parseColor("#fffafafa"));
                     }
                 }
+            }else if (v.getId() == itemView.getId()){
+                Intent intent = new Intent();
+                intent.setClass(context, AddScoffActivity.class);
+                intent.putExtra("spanId", spanIdsList.get(getAdapterPosition()));
+                intent.putExtra("spanName", namesList.get(getAdapterPosition()));
+                context.startActivity(intent);
             }
         }
     }

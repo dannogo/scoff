@@ -20,11 +20,17 @@ public class AddScoffActivity extends AppCompatActivity {
     protected FragmentPagerAdapter fragmentPagerAdapter;
     protected FragmentAddProducts fragmentAddProducts;
     protected FragmentAddScoff fragmentAddScoff;
+    protected String spanId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_scoff);
+
+        Bundle extras = getIntent().getExtras();
+        spanId = extras.getString("spanId");
+        String spanName = extras.getString("spanName");
+        getSupportActionBar().setTitle(spanName);
 
         databaseAdapter = new DatabaseAdapter(this);
 
