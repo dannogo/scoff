@@ -34,7 +34,7 @@ public class AddScoffActivity extends AppCompatActivity {
 
         databaseAdapter = new DatabaseAdapter(this);
 
-        databaseAdapter.getSums(1);
+//        databaseAdapter.getSums(1);
 
         pager = (ViewPager) findViewById(R.id.pager);
         fragmentPagerAdapter = new ScoffPagerAdapter(getSupportFragmentManager());

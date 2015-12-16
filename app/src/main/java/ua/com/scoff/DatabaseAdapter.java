@@ -46,7 +46,6 @@ public class DatabaseAdapter {
                 + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
 
         String orderBy = SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID + " ASC";
-//        String orderBy = SQLHelper.RECORDS_ID + " ASC";
 
         String[] columns = {SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID,
                 SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME,
@@ -58,38 +57,14 @@ public class DatabaseAdapter {
                 SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES
         };
 
-//        String[] columns = {SQLHelper.RECORDS_ID,
-//                SQLHelper.RECORDS_DATETIME,
-//                SQLHelper.RECORDS_QUANTITY,
-//                SQLHelper.PRODUCTS_DENOMINATION,
-//                SQLHelper.PRODUCTS_PROTEINS,
-//                SQLHelper.PRODUCTS_FATS,
-//                SQLHelper.PRODUCTS_CARBOHYDRATES,
-//                SQLHelper.PRODUCTS_CALORIES
-//        };
-
         String[] whereArgs = {String.valueOf(spanId)};
 
         Cursor cursor = builder.query(db, columns,
                 SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_SPAN + " =?",
                 whereArgs, null, null, orderBy);
 
-//        Cursor cursor = builder.query(db, columns,
-//                SQLHelper.RECORDS_RELATED_SPAN + " =?",
-//                whereArgs, null, null, orderBy);
-
         ArrayList<String[]> result = new ArrayList<>();
         while (cursor.moveToNext()){
-            // this doesnt work well because of bug https://code.google.com/p/android/issues/detail?id=7201
-
-//            int recIdIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_ID);
-//            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_DATETIME);
-//            int recQuantityIndex = cursor.getColumnIndex(SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_QUANTITY);
-//            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_DENOMINATION);
-//            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_PROTEINS);
-//            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_FATS);
-//            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CARBOHYDRATES);
-//            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_CALORIES);
 
             int recIdIndex = cursor.getColumnIndex(SQLHelper.RECORDS_ID);
             int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.RECORDS_DATETIME);
@@ -127,22 +102,11 @@ public class DatabaseAdapter {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         db.execSQL("DROP VIEW IF EXISTS view");
-
         db.execSQL("CREATE VIEW view AS SELECT * FROM " + SQLHelper.TABLE_RECORDS +" INNER JOIN "+SQLHelper.TABLE_PRODUCTS+" ON "
                 + SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_PRODUCT +" = "
                 + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
 
         String[] whereArgs = new String[]{ String.valueOf(spanId) };
-
-//        db.rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
-
-//        Cursor cursor1 = db.rawQuery("SELECT " + SQLHelper.RECORDS_ID + ", " +
-//                SQLHelper.RECORDS_DATETIME + ", " +
-//                SQLHelper.PRODUCTS_DENOMINATION + ", " +
-//                SQLHelper.PRODUCTS_PROTEINS + ", " +
-//                SQLHelper.PRODUCTS_FATS + ", " +
-//                SQLHelper.PRODUCTS_CARBOHYDRATES + ", " +
-//                SQLHelper.PRODUCTS_CALORIES + " FROM view WHERE " + SQLHelper.RECORDS_RELATED_SPAN + " =?", whereArgs);
 
         Cursor cursor = db.rawQuery("SELECT SUM("+SQLHelper.PRODUCTS_PROTEINS+"), SUM("+
                 SQLHelper.PRODUCTS_FATS+"), SUM("+SQLHelper.PRODUCTS_CARBOHYDRATES+"), SUM("+SQLHelper.PRODUCTS_CALORIES+
@@ -156,37 +120,13 @@ public class DatabaseAdapter {
             int sumCarbohydrates = cursor.getInt(2);
             int sumCalories = cursor.getInt(3);
 
-            Log.w("getSums", "proteins: "+sumProteins);
-            Log.w("getSums", "fats: "+sumFats);
-            Log.w("getSums", "carbohydrates: "+sumCarbohydrates);
-            Log.w("getSums", "calories: "+sumCalories);
+//            Log.w("getSums", "proteins: "+sumProteins);
+//            Log.w("getSums", "fats: "+sumFats);
+//            Log.w("getSums", "carbohydrates: "+sumCarbohydrates);
+//            Log.w("getSums", "calories: "+sumCalories);
 
-
-//            int recIdIndex = cursor.getColumnIndex(SQLHelper.RECORDS_ID);
-//            int recDatetimeIndex = cursor.getColumnIndex(SQLHelper.RECORDS_DATETIME);
-//            int prodDenominationIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_DENOMINATION);
-//            int prodProteinsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_PROTEINS);
-//            int prodFatsIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_FATS);
-//            int prodCarbohydratesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CARBOHYDRATES);
-//            int prodCaloriesIndex = cursor.getColumnIndex(SQLHelper.PRODUCTS_CALORIES);
-
-//            int recId = cursor.getInt(recIdIndex);
-//            String recDatetime = cursor.getString(recDatetimeIndex);
-//            String prodDenomination = cursor.getString(prodDenominationIndex);
-//            int prodProteins = cursor.getInt(prodProteinsIndex);
-//            int prodFats = cursor.getInt(prodFatsIndex);
-//            int prodCarbohydrates = cursor.getInt(prodCarbohydratesIndex);
-//            int prodCalories = cursor.getInt(prodCaloriesIndex);
-
-//            Log.w("getSumsTest", "id: "+recId+"\nrecDatetime: "+recDatetime+"\nprodDenomination: "+prodDenomination+"\nprodProteins: "+prodProteins+
-//            "\nprodFats: "+prodFats+"\nprodCarbohydrates: "+prodCarbohydrates+"\nprodCalories: "+prodCalories);
-//
-//            String[] row = {
-//                    String.valueOf(recId), recDatetime,
-//                    prodDenomination, String.valueOf(prodProteins), String.valueOf(prodFats),
-//                    String.valueOf(prodCarbohydrates), String.valueOf(prodCalories)
-//            };
-//            result.add(row);
+            String[] row = {String.valueOf(sumProteins), String.valueOf(sumFats), String.valueOf(sumCarbohydrates), String.valueOf(sumCalories)};
+            result.add(row);
         }
         cursor.close();
         db.close();
