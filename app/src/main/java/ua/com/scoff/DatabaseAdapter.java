@@ -98,7 +98,7 @@ public class DatabaseAdapter {
         return result;
     }
 
-    public ArrayList<String[]> getSums(int spanId){
+    public String[] getSums(int spanId){
         SQLiteDatabase db = helper.getWritableDatabase();
 
         db.execSQL("DROP VIEW IF EXISTS view");
@@ -111,27 +111,19 @@ public class DatabaseAdapter {
         Cursor cursor = db.rawQuery("SELECT SUM("+SQLHelper.PRODUCTS_PROTEINS+"), SUM("+
                 SQLHelper.PRODUCTS_FATS+"), SUM("+SQLHelper.PRODUCTS_CARBOHYDRATES+"), SUM("+SQLHelper.PRODUCTS_CALORIES+
                         ") FROM view WHERE "+SQLHelper.RECORDS_RELATED_SPAN+ " =?", whereArgs);
+        cursor.moveToNext();
 
-        ArrayList<String[]> result = new ArrayList<>();
-        while (cursor.moveToNext()){
+        int sumProteins = cursor.getInt(0);
+        int sumFats = cursor.getInt(1);
+        int sumCarbohydrates = cursor.getInt(2);
+        int sumCalories = cursor.getInt(3);
 
-            int sumProteins = cursor.getInt(0);
-            int sumFats = cursor.getInt(1);
-            int sumCarbohydrates = cursor.getInt(2);
-            int sumCalories = cursor.getInt(3);
+        String[] row = {String.valueOf(sumProteins), String.valueOf(sumFats), String.valueOf(sumCarbohydrates), String.valueOf(sumCalories)};
 
-//            Log.w("getSums", "proteins: "+sumProteins);
-//            Log.w("getSums", "fats: "+sumFats);
-//            Log.w("getSums", "carbohydrates: "+sumCarbohydrates);
-//            Log.w("getSums", "calories: "+sumCalories);
-
-            String[] row = {String.valueOf(sumProteins), String.valueOf(sumFats), String.valueOf(sumCarbohydrates), String.valueOf(sumCalories)};
-            result.add(row);
-        }
         cursor.close();
         db.close();
 
-        return result;
+        return row;
     }
 
     public ArrayList<String[]> getSpansData(){

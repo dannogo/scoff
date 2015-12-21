@@ -26,10 +26,10 @@ public class ScoffAdapter extends RecyclerView.Adapter<ScoffAdapter.ScoffViewHol
     protected ArrayList<String> caloriesList = new ArrayList<>();
     protected ArrayList<Integer> weightsList = new ArrayList<>();
 
-    public ScoffAdapter(Context context){
+    public ScoffAdapter(Context context, int spanId){
         inflater = LayoutInflater.from(context);
         this.context = context;
-        ArrayList<String[]> data = ((AddScoffActivity) this.context).databaseAdapter.getScoffRecordsData(1);
+        ArrayList<String[]> data = ((AddScoffActivity) this.context).databaseAdapter.getScoffRecordsData(spanId);
         if (data != null){
             for (int i=0; i<data.size(); i++){
                 recordIDsList.add(data.get(i)[0]);
@@ -41,17 +41,18 @@ public class ScoffAdapter extends RecyclerView.Adapter<ScoffAdapter.ScoffViewHol
                 carbohydratesList.add(data.get(i)[6]);
                 caloriesList.add(data.get(i)[7]);
 
-                Log.w("ScoffAdapter", ""
-                                +data.get(i)[0]+"\n"
-                                +data.get(i)[1]+"\nquantity: "
-                                +data.get(i)[2]+"\n"
-                                +data.get(i)[3]+"\n"
-                                +data.get(i)[4]+"\n"
-                                +data.get(i)[5]+"\n"
-                                +data.get(i)[6]+"\n"
-                                +data.get(i)[7]+"\n"
-                );
+//                Log.w("ScoffAdapter", ""
+//                                +data.get(i)[0]+"\n"
+//                                +data.get(i)[1]+"\nquantity: "
+//                                +data.get(i)[2]+"\n"
+//                                +data.get(i)[3]+"\n"
+//                                +data.get(i)[4]+"\n"
+//                                +data.get(i)[5]+"\n"
+//                                +data.get(i)[6]+"\n"
+//                                +data.get(i)[7]+"\n"
+//                );
             }
+
         }
 
     }
