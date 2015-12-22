@@ -41,16 +41,6 @@ public class ScoffAdapter extends RecyclerView.Adapter<ScoffAdapter.ScoffViewHol
                 carbohydratesList.add(data.get(i)[6]);
                 caloriesList.add(data.get(i)[7]);
 
-//                Log.w("ScoffAdapter", ""
-//                                +data.get(i)[0]+"\n"
-//                                +data.get(i)[1]+"\nquantity: "
-//                                +data.get(i)[2]+"\n"
-//                                +data.get(i)[3]+"\n"
-//                                +data.get(i)[4]+"\n"
-//                                +data.get(i)[5]+"\n"
-//                                +data.get(i)[6]+"\n"
-//                                +data.get(i)[7]+"\n"
-//                );
             }
 
         }

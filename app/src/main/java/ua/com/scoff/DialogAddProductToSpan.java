@@ -28,7 +28,8 @@ public class DialogAddProductToSpan extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add to current span");
+        String denomination = getArguments().getString("denomination");
+        builder.setTitle(new StringBuilder("Add \"").append(denomination).append("\" to span"));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View inflatedView = inflater.inflate(R.layout.dialog_add_product_to_span_edittext, null);
@@ -83,10 +84,13 @@ public class DialogAddProductToSpan extends DialogFragment {
                         int productId = getArguments().getInt("productId");
                         int id = ((AddScoffActivity)getActivity()).databaseAdapter.insertRecordToSpan(spanId, productId, quantityValue);
                         Log.w("DialogAddProductToSpan", String.valueOf(id));
+                        if (id>0) {
+                            ((AddScoffActivity) getActivity()).databaseAdapter.increaseProductFrequency(productId);
 
-                        ((AddScoffActivity)getActivity()).fragmentAddScoff.scoffAdapter = new ScoffAdapter(getActivity(), Integer.parseInt(((AddScoffActivity) getActivity()).spanId));
-                        ((AddScoffActivity)getActivity()).fragmentAddScoff.scoffList.setAdapter(((AddScoffActivity)getActivity()).fragmentAddScoff.scoffAdapter);
-                        ((AddScoffActivity)getActivity()).fragmentAddScoff.displayTotals();
+                            ((AddScoffActivity) getActivity()).fragmentAddScoff.scoffAdapter = new ScoffAdapter(getActivity(), Integer.parseInt(((AddScoffActivity) getActivity()).spanId));
+                            ((AddScoffActivity) getActivity()).fragmentAddScoff.scoffList.setAdapter(((AddScoffActivity) getActivity()).fragmentAddScoff.scoffAdapter);
+                            ((AddScoffActivity) getActivity()).fragmentAddScoff.displayTotals();
+                        }
                         dialog.dismiss();
                     }
 

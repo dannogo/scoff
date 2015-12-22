@@ -144,10 +144,15 @@ public class DialogAddProduct extends DialogFragment {
                     if (isDenominationValid && isProteinsValid && isFatsValid && isCarbohydratesValid && isCaloricCapacityValid){
 
                         String denominationValue = denomination.getText().toString();
-                        int proteinsValue = Integer.parseInt(proteins.getText().toString());
-                        int fatsValue = Integer.parseInt(fats.getText().toString());
-                        int carbohydratesValue = Integer.parseInt(carbohydrates.getText().toString());
+//                        int proteinsValue = Integer.parseInt(proteins.getText().toString());
+//                        int fatsValue = Integer.parseInt(fats.getText().toString());
+//                        int carbohydratesValue = Integer.parseInt(carbohydrates.getText().toString());
                         int caloricCapacityValue = Integer.parseInt(caloricCapacity.getText().toString());
+
+                        float proteinsValue = Float.parseFloat(proteins.getText().toString());
+                        float fatsValue = Float.parseFloat(fats.getText().toString());
+                        float carbohydratesValue = Float.parseFloat(carbohydrates.getText().toString());
+
 
 //                        Log.w("LOG", denominationValue+"\n"+proteinsValue+"\n"+fatsValue+"\n"+carbohydratesValue+"\n"+caloricCapacityValue);
 
@@ -193,7 +198,8 @@ public class DialogAddProduct extends DialogFragment {
     }
 
     private boolean validateDenomination(){
-        if (denomination.getText().toString().matches("^[a-zA-Zа-яА-Я0-9 ]*$") && !(denomination.getText().toString().matches("^$|\\s"))){
+//        if (denomination.getText().toString().matches("^[a-zA-Zа-яА-Я0-9 ]*$") && !(denomination.getText().toString().matches("^$|\\s"))){
+        if (!(denomination.getText().toString().matches("^$|\\s"))){
             denominationValidation.setErrorEnabled(false);
             ViewCompat.setBackgroundTintList(denomination, new ColorStateList(new int[][]{new int[]{0xFFde3309}}, new int[]{Color.parseColor("#00BFA5")}));
             denominationValidation.setHint("Denomination");

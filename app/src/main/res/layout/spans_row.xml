@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Some span"
             android:textSize="@dimen/abc_text_size_large_material"
+            android:textColor="#00897B"
             />
 
         <TextView

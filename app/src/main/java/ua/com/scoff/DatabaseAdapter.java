@@ -79,10 +79,11 @@ public class DatabaseAdapter {
             String recDatetime = cursor.getString(recDatetimeIndex);
             int recQuantity = cursor.getInt(recQuantityIndex);
             String prodDenomination = cursor.getString(prodDenominationIndex);
-            int prodProteins = cursor.getInt(prodProteinsIndex);
-            int prodFats = cursor.getInt(prodFatsIndex);
-            int prodCarbohydrates = cursor.getInt(prodCarbohydratesIndex);
+            float prodProteins = cursor.getFloat(prodProteinsIndex);
+            float prodFats = cursor.getFloat(prodFatsIndex);
+            float prodCarbohydrates = cursor.getFloat(prodCarbohydratesIndex);
             int prodCalories = cursor.getInt(prodCaloriesIndex);
+
 
             String[] row = {
                     String.valueOf(recId), recDatetime, String.valueOf(recQuantity),
@@ -130,7 +131,7 @@ public class DatabaseAdapter {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         String[] columns = {SQLHelper.SPANS_ID, SQLHelper.SPANS_NAME, SQLHelper.SPANS_DATETIME, SQLHelper.SPANS_ISCLOSED};
-        Cursor cursor = db.query(SQLHelper.TABLE_SPANS, columns, null, null, null, null, SQLHelper.SPANS_ID+" DESC");
+        Cursor cursor = db.query(SQLHelper.TABLE_SPANS, columns, null, null, null, null, SQLHelper.SPANS_ID + " DESC");
 
         ArrayList<String[]> result = new ArrayList<>();
         while (cursor.moveToNext()){
@@ -176,9 +177,9 @@ public class DatabaseAdapter {
 
             int id = cursor.getInt(idIndex);
             String denomination = cursor.getString(denominationIndex);
-            int proteins = cursor.getInt(proteinsIndex);
-            int fats = cursor.getInt(fatsIndex);
-            int carbohydrates = cursor.getInt(carbohydratesIndex);
+            float proteins = cursor.getFloat(proteinsIndex);
+            float fats = cursor.getFloat(fatsIndex);
+            float carbohydrates = cursor.getFloat(carbohydratesIndex);
             int calories = cursor.getInt(caloriesIndex);
             int frequency = cursor.getInt(frequencyIndex);
 
@@ -192,7 +193,7 @@ public class DatabaseAdapter {
         return result;
     }
 
-    public int insertProduct(String denomination, int proteins, int fats, int carbohydrates, int caloricCapacity){
+    public int insertProduct(String denomination, float proteins, float fats, float carbohydrates, int caloricCapacity){
         SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLHelper.PRODUCTS_DENOMINATION, denomination);
@@ -237,7 +238,25 @@ public class DatabaseAdapter {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SQLHelper.SPANS_ISCLOSED, close);
         String[] whereArgs = {String.valueOf(id)};
-        int count = db.update(SQLHelper.TABLE_SPANS, contentValues, SQLHelper.SPANS_ID+ " =?", whereArgs);
+        int count = db.update(SQLHelper.TABLE_SPANS, contentValues, SQLHelper.SPANS_ID + " =?", whereArgs);
+        db.close();
+        return count;
+    }
+
+    public void increaseProductFrequency(int productId){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] whereArgs = {String.valueOf(productId)};
+        db.execSQL("UPDATE "+SQLHelper.TABLE_PRODUCTS+" SET "+
+            SQLHelper.PRODUCTS_FREQUENCY+" = "+SQLHelper.PRODUCTS_FREQUENCY+" +1 WHERE "+
+            SQLHelper.PRODUCTS_ID+" =?", whereArgs);
+
+        db.close();
+    }
+
+    public int deleteProduct(int productId){
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] whereArgs = {String.valueOf(productId)};
+        int count = db.delete(SQLHelper.TABLE_PRODUCTS, SQLHelper.PRODUCTS_ID+" =?", whereArgs);
         db.close();
         return count;
     }
@@ -247,7 +266,7 @@ public class DatabaseAdapter {
 
         private Context context;
         private static final String DATABASE_NAME = "scoff";
-        private static final int DATABASE_VERSION = 8;
+        private static final int DATABASE_VERSION = 9;
 
         // Table products
         private static final String TABLE_PRODUCTS = "products";
@@ -262,9 +281,9 @@ public class DatabaseAdapter {
         private static final String CREATE_TABLE_PRODUCTS = "CREATE TABLE "+TABLE_PRODUCTS+"("
                     + PRODUCTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + PRODUCTS_DENOMINATION + " VARCHAR(255), "
-                    + PRODUCTS_PROTEINS + " INTEGER NOT NULL, "
-                    + PRODUCTS_FATS + " INTEGER NOT NULL, "
-                    + PRODUCTS_CARBOHYDRATES + " INTEGER NOT NULL, "
+                    + PRODUCTS_PROTEINS + " REAL NOT NULL, "
+                    + PRODUCTS_FATS + " REAL NOT NULL, "
+                    + PRODUCTS_CARBOHYDRATES + " REAL NOT NULL, "
                     + PRODUCTS_CALORIES + " INTEGER NOT NULL, "
                     + PRODUCTS_FREQUENCY + " INTEGER DEFAULT 0"
                 + ");";

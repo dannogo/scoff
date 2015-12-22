@@ -3,6 +3,7 @@ package ua.com.scoff;
 import android.content.Context;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 carbohydratesList.add(currentRecord[4]);
                 caloriesList.add(currentRecord[5]);
                 frequenciesList.add(Integer.parseInt(currentRecord[6]));
+                Log.w("ProductsAdapter", "denom: "+currentRecord[1]+", freq: "+ currentRecord[6]+"");
             }
         }
     }

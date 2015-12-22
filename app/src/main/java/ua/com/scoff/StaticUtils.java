@@ -85,6 +85,7 @@ public class StaticUtils  {
         final int spanId = Integer.parseInt(((AddScoffActivity) context).spanId);
         TextView productIdTextView = (TextView)view.findViewById(R.id.productId);
         final int productId = Integer.parseInt(productIdTextView.getText().toString());
+        final TextView denominationTextView = (TextView)view.findViewById(R.id.product_denomination);
 
         addToSpanItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +95,7 @@ public class StaticUtils  {
                 Bundle data = new Bundle();
                 data.putInt("spanId", spanId);
                 data.putInt("productId", productId);
+                data.putString("denomination", denominationTextView.getText().toString());
                 dialogAddProductToSpan.setArguments(data);
                 dialogAddProductToSpan.show(((AddScoffActivity)context).getFragmentManager(), "FragmentAddProductToSpan");
 
