@@ -43,7 +43,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 carbohydratesList.add(currentRecord[4]);
                 caloriesList.add(currentRecord[5]);
                 frequenciesList.add(Integer.parseInt(currentRecord[6]));
-                Log.w("ProductsAdapter", "denom: "+currentRecord[1]+", freq: "+ currentRecord[6]+"");
+//                Log.w("ProductsAdapter", "denom: "+currentRecord[1]+", freq: "+ currentRecord[6]+"");
             }
         }
     }

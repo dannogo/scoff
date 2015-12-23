@@ -79,16 +79,15 @@ public class DatabaseAdapter {
             String recDatetime = cursor.getString(recDatetimeIndex);
             int recQuantity = cursor.getInt(recQuantityIndex);
             String prodDenomination = cursor.getString(prodDenominationIndex);
-            float prodProteins = cursor.getFloat(prodProteinsIndex);
-            float prodFats = cursor.getFloat(prodFatsIndex);
-            float prodCarbohydrates = cursor.getFloat(prodCarbohydratesIndex);
-            int prodCalories = cursor.getInt(prodCaloriesIndex);
-
+            float prodProteins = cursor.getFloat(prodProteinsIndex) / 100 * recQuantity;
+            float prodFats = cursor.getFloat(prodFatsIndex) / 100 * recQuantity;
+            float prodCarbohydrates = cursor.getFloat(prodCarbohydratesIndex) / 100 * recQuantity;
+            int prodCalories = (int)(((float)cursor.getInt(prodCaloriesIndex)) / 100 * recQuantity);
 
             String[] row = {
                     String.valueOf(recId), recDatetime, String.valueOf(recQuantity),
-                    prodDenomination, String.valueOf(prodProteins), String.valueOf(prodFats),
-                    String.valueOf(prodCarbohydrates), String.valueOf(prodCalories)
+                    prodDenomination, String.valueOf((float)Math.round(prodProteins * 10) / 10), String.valueOf((float)Math.round(prodFats * 10) / 10),
+                    String.valueOf((float)Math.round(prodCarbohydrates * 10) / 10), String.valueOf(prodCalories)
             };
             result.add(row);
         }
@@ -99,33 +98,33 @@ public class DatabaseAdapter {
         return result;
     }
 
-    public String[] getSums(int spanId){
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.execSQL("DROP VIEW IF EXISTS view");
-        db.execSQL("CREATE VIEW view AS SELECT * FROM " + SQLHelper.TABLE_RECORDS +" INNER JOIN "+SQLHelper.TABLE_PRODUCTS+" ON "
-                + SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_PRODUCT +" = "
-                + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
-
-        String[] whereArgs = new String[]{ String.valueOf(spanId) };
-
-        Cursor cursor = db.rawQuery("SELECT SUM("+SQLHelper.PRODUCTS_PROTEINS+"), SUM("+
-                SQLHelper.PRODUCTS_FATS+"), SUM("+SQLHelper.PRODUCTS_CARBOHYDRATES+"), SUM("+SQLHelper.PRODUCTS_CALORIES+
-                        ") FROM view WHERE "+SQLHelper.RECORDS_RELATED_SPAN+ " =?", whereArgs);
-        cursor.moveToNext();
-
-        int sumProteins = cursor.getInt(0);
-        int sumFats = cursor.getInt(1);
-        int sumCarbohydrates = cursor.getInt(2);
-        int sumCalories = cursor.getInt(3);
-
-        String[] row = {String.valueOf(sumProteins), String.valueOf(sumFats), String.valueOf(sumCarbohydrates), String.valueOf(sumCalories)};
-
-        cursor.close();
-        db.close();
-
-        return row;
-    }
+//    public String[] getSums(int spanId){
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//
+//        db.execSQL("DROP VIEW IF EXISTS view");
+//        db.execSQL("CREATE VIEW view AS SELECT * FROM " + SQLHelper.TABLE_RECORDS +" INNER JOIN "+SQLHelper.TABLE_PRODUCTS+" ON "
+//                + SQLHelper.TABLE_RECORDS +"."+ SQLHelper.RECORDS_RELATED_PRODUCT +" = "
+//                + SQLHelper.TABLE_PRODUCTS +"."+ SQLHelper.PRODUCTS_ID);
+//
+//        String[] whereArgs = new String[]{ String.valueOf(spanId) };
+//
+//        Cursor cursor = db.rawQuery("SELECT SUM("+SQLHelper.PRODUCTS_PROTEINS+"), SUM("+
+//                SQLHelper.PRODUCTS_FATS+"), SUM("+SQLHelper.PRODUCTS_CARBOHYDRATES+"), SUM("+SQLHelper.PRODUCTS_CALORIES+
+//                        ") FROM view WHERE "+SQLHelper.RECORDS_RELATED_SPAN+ " =?", whereArgs);
+//        cursor.moveToNext();
+//
+//        int sumProteins = cursor.getInt(0);
+//        int sumFats = cursor.getInt(1);
+//        int sumCarbohydrates = cursor.getInt(2);
+//        int sumCalories = cursor.getInt(3);
+//
+//        String[] row = {String.valueOf(sumProteins), String.valueOf(sumFats), String.valueOf(sumCarbohydrates), String.valueOf(sumCalories)};
+//
+//        cursor.close();
+//        db.close();
+//
+//        return row;
+//    }
 
     public ArrayList<String[]> getSpansData(){
         SQLiteDatabase db = helper.getWritableDatabase();

@@ -47,8 +47,25 @@ public class FragmentAddScoff extends Fragment {
         return rootView;
     }
 
+    protected String[] getSums(){
+        float protsSum =0;
+        float fatsSum =0;
+        float carbsSum =0;
+        float caloriesSum =0;
+        for (int i=0; i< scoffAdapter.proteinsList.size(); i++) {
+            protsSum += Float.parseFloat(scoffAdapter.proteinsList.get(i));
+            fatsSum += Float.parseFloat(scoffAdapter.fatsList.get(i));
+            carbsSum += Float.parseFloat(scoffAdapter.carbohydratesList.get(i));
+            caloriesSum += Float.parseFloat(scoffAdapter.caloriesList.get(i));
+        }
+
+        String[] result = {String.valueOf((int)protsSum), String.valueOf((int)fatsSum), String.valueOf((int)carbsSum), String.valueOf((int)caloriesSum)};
+        return result;
+    }
+
     protected void displayTotals(){
-        String[] sums = ((AddScoffActivity)getActivity()).databaseAdapter.getSums(Integer.parseInt(((AddScoffActivity) getActivity()).spanId));
+//        String[] sums = ((AddScoffActivity)getActivity()).databaseAdapter.getSums(Integer.parseInt(((AddScoffActivity) getActivity()).spanId));
+        String[] sums = getSums();
         totalProteins.setText(sums[0]);
         totalFats.setText(sums[1]);
         totalCarbohydrates.setText(sums[2]);
